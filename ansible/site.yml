@@ -3,7 +3,7 @@
   tasks:
     - name: Clone repo onto box
       git:
-        repo: https://github.com/EngineersBox/NewsAggregator.git
+        repo: https://github.com/EngineersBox/ansible-test.git
         dest: "temp"
         clone: yes
         version: main
