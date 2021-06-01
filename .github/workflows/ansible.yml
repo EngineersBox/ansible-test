@@ -1,0 +1,42 @@
+name: Ansible Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Comma seperated list of components to deploy from: [elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend]'     
+        required: true
+        default: 'elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PRIVATE_KEY_FILE: id_rsa
+      ANSIBLE_DIR: ./ansible
+      PLAYBOOK: playbooks/deploy.yml
+    steps:
+      - uses: actions/checkout@main
+      - name: Install ansible
+        run: |
+          sudo apt update
+          sudo apt install -y software-properties-common
+          sudo apt-add-repository -yu ppa:ansible/ansible
+          sudo apt install -y ansible
+          ansible-galaxy collection install community.general
+      - name: Create key file
+        run: |
+          echo "$SSH_PRIVATE_KEY" > $PRIVATE_KEY_FILE
+          sudo chmod 0600 $PRIVATE_KEY_FILE
+        working-directory: ${{ env.ANSIBLE_DIR }}
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+      - name: Verify targets are accessible
+        run: ansible all --private-key=$PRIVATE_KEY_FILE -m ping
+        working-directory: ${{ env.ANSIBLE_DIR }}
+      - name: Run playbook
+        run: ansible-playbook -v --tags "$(echo "${{ github.event.inputs.tags }}" | tr -ds "[:space:]" "")"  --private-key=$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
+        working-directory: ${{ env.ANSIBLE_DIR }}
+      - name: Remove key file
+        run: sudo rm -rf $PRIVATE_KEY_FILE
+        working-directory: ${{ env.ANSIBLE_DIR }}
