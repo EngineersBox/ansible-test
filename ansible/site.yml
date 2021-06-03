@@ -12,11 +12,14 @@
         dest: "temp"
         clone: yes
         version: main
+    - name: Update pip
+      shell:
+        cmd: "python3 -m pip install --upgrade pip"
+        chdir: temp
     - name: Install python dependencies
       shell:
         cmd: "python3 -m pip install -r requirements.txt"
         chdir: "temp"
-      become: true
   tags:
     - always
 
