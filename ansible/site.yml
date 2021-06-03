@@ -11,6 +11,8 @@
       shell:
         cmd: "python3 -m pip install -r requirements.txt"
         chdir: "temp"
+  tags:
+    - always
 
 - hosts: targets
   roles:
@@ -46,3 +48,5 @@
         path: "temp"
         state: absent
       become: true
+  tags:
+    - always
