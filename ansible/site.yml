@@ -7,6 +7,10 @@
         dest: "temp"
         clone: yes
         version: main
+    - name: Install python dependencies
+      shell:
+        cmd: "python3 -m pip install -r requirements.txt"
+        chdir: "temp"
 
 - hosts: targets
   roles:
