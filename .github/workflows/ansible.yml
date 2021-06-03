@@ -24,10 +24,6 @@ jobs:
           sudo apt-add-repository -yu ppa:ansible/ansible
           sudo apt install -y ansible
           ansible-galaxy collection install community.general
-      - name: Install python requirements
-        run: |
-          echo $PWD
-          python3 -m pip install -r requirements.txt
       - name: Create key file
         run: |
           echo "$SSH_PRIVATE_KEY" > $PRIVATE_KEY_FILE
