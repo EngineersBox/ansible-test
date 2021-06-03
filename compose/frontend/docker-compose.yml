@@ -5,8 +5,6 @@ services:
         network_mode: host
         build:
             context: ../../frontend
-        depends_on:
-            - backend
         volumes:
             - ../frontend:/frontend
         command: http-server dist --port 3002
