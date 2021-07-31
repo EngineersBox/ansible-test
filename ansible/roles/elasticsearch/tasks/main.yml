@@ -27,6 +27,7 @@
   become: true
   tags:
     - elasticsearch
+    - elasticsearch_base_indexes
 
 - name: Create base indexes
   shell:
