@@ -9,7 +9,7 @@ on:
         default: 'elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend'
       verbosity:
         description: "Level of verbosity to run Absible at. Must be one of: [0, 1, 2, 3]"
-        required: false
+        required: true
         default: '1'
 
 jobs:
@@ -23,7 +23,9 @@ jobs:
       - uses: actions/checkout@main
       - name: Validate workflow inputs
         run: |
-          contains() { [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && echo "Valid input for '$3'" || exit(1) }
+          contains() {\
+            [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && echo "Valid input for '$3'" || exit(1)\
+          }
           contains "elasticsearch elasticsearch_base_indexes elasticsearch_knn_indexes redis redis_backup_restore frontend backend" "${{ github.event.inputs.tags }}" "tags"
           contains "0 1 2 3" "${{ github.event.inputs.verbosity }}" "verbosity"
       - name: Create verbosity level flags
