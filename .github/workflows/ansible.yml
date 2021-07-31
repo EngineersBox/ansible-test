@@ -31,7 +31,7 @@ jobs:
       - name: Create verbosity level flags
         run: |
           verbosity_tags="$(echo "-$(printf "%3s" | tr " " "v")")"
-          echo "action_state=\"$verbosity_tags\"" >> $GITHUB_ENV
+          echo "verbosity_tags=\"$verbosity_tags\"" >> $GITHUB_ENV
           echo "Generated verbosity flag: [$verbosity_tags]"
       - name: Install ansible
         run: |
