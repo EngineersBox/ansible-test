@@ -19,14 +19,21 @@
     - elasticsearch
 
 - name: Wait for elasticsearch to start
-  uri:
-    url: "http://localhost:9200/_recovery"
-    method: GET
-    return_content: yes
-  register: _result
-  until: _result.content == '{}'
+  command: docker exec elasticsearch curl localhost:9200/_recovery -s
+  register: result
+  until: result.content == '{}'
   retries: 30 # retry X times
-  delay: 5 # pause for X sec b/w each call
+  delay: 3 # pause for X sec b/w each call
+
+- name: Wait for elasticsearch to start
+  wait_for:
+    host: localhost
+    port: 9200
+    delay: 5
+    sleep: 5
+    connect_timeout: 1
+  tags:
+    - elasticsearch
 
 - name: Create base indexes
   shell:
