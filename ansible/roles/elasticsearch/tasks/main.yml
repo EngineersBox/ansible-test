@@ -19,19 +19,12 @@
     - elasticsearch
 
 - name: Wait for elasticsearch to start
-  command: docker exec elasticsearch curl localhost:9200/_recovery -s
+  command: docker exec elasticsearch curl localhost:9200/_recovery -sS
   register: result
-  until: result.content == '{}'
-  retries: 30 # retry X times
-  delay: 3 # pause for X sec b/w each call
-
-- name: Wait for elasticsearch to start
-  wait_for:
-    host: localhost
-    port: 9200
-    delay: 5
-    sleep: 5
-    connect_timeout: 1
+  until: result.stdout == '{}'
+  retries: 30
+  delay: 5 # Seconds
+  become: true
   tags:
     - elasticsearch
 
@@ -44,7 +37,7 @@
 
 - name: Create KNN indexes
   shell:
-    cmd: "python index.py"
-    chdir: "temp/knn_indexeing"
+    cmd: "python3 index.py"
+    chdir: "temp/knn_indexing"
   tags:
     - elasticsearch_knn_indexes

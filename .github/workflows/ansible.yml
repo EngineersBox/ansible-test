@@ -7,6 +7,10 @@ on:
         description: 'Comma seperated list of components to deploy from: [elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend]'     
         required: true
         default: 'elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend'
+      verbosity:
+        description: "Level of verbosity to run Absible at. Must be one of: [0, 1, 2, 3]"
+        required: false
+        default: '1'
 
 jobs:
   build:
@@ -17,6 +21,13 @@ jobs:
       PLAYBOOK: site.yml
     steps:
       - uses: actions/checkout@main
+      - name: Validate workflow inputs
+        run: |
+          contains() { [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && echo "Valid input for '$3'" || exit(1) }
+          contains "elasticsearch elasticsearch_base_indexes elasticsearch_knn_indexes redis redis_backup_restore frontend backend" "${{ github.event.inputs.tags }}" "tags"
+          contains "0 1 2 3" "${{ github.event.inputs.verbosity }}" "verbosity"
+      - name: Create verbosity level flags
+        run: verbosityTags="$(echo "-$(printf "%3s" | tr " " "v")")"
       - name: Install ansible
         run: |
           sudo apt update
@@ -35,7 +46,7 @@ jobs:
         run: ansible all --private-key=$PRIVATE_KEY_FILE -m ping
         working-directory: ${{ env.ANSIBLE_DIR }}
       - name: Run playbook
-        run: ansible-playbook -v --tags "$(echo "${{ github.event.inputs.tags }}" | tr -ds "[:space:]" "")"  --private-key=$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
+        run: exec "ansible-playbook $(echo $verbosityTags) --tags \"$(echo "${{ github.event.inputs.tags }}\" | tr -ds \"[:space:]\" \"\")\"  --private-key=$PRIVATE_KEY_FILE --extra-vars \"ansible_sudo_pass=${{ secrets.SUDO_PASS }}\" $PLAYBOOK"
         working-directory: ${{ env.ANSIBLE_DIR }}
       - name: Remove key file
         run: sudo rm -rf $PRIVATE_KEY_FILE
