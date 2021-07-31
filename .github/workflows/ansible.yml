@@ -23,9 +23,11 @@ jobs:
       - uses: actions/checkout@main
       - name: Validate workflow inputs
         run: |
-          chmod +x ./listContains.sh
-          ./listContains.sh "elasticsearch elasticsearch_base_indexes elasticsearch_knn_indexes redis redis_backup_restore frontend backend" "${{ github.event.inputs.tags }}" "tags"
-          ./listContains.sh "0 1 2 3" "${{ github.event.inputs.verbosity }}" "verbosity"
+          chmod +x ./.github/listContains.sh
+          ./.github/listContains.sh "elasticsearch elasticsearch_base_indexes elasticsearch_knn_indexes redis redis_backup_restore frontend backend" "$(echo ${{ github.event.inputs.tags }} | tr -ds "," " ")"
+          echo "Using validated tags: [${{ github.event.inputs.tags }}]"
+          ./.github/listContains.sh "0 1 2 3" "${{ github.event.inputs.verbosity }}"
+          echo "Using validated verbosity: [${{ github.event.inputs.verbosity }}]"
       - name: Create verbosity level flags
         run: verbosityTags="$(echo "-$(printf "%3s" | tr " " "v")")"
       - name: Install ansible

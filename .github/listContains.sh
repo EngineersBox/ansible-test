@@ -1,3 +1,10 @@
 #!/bin/bash
 
-[[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && echo "Valid input for '$3'" || echo "Invalid"
+printExit() {
+    echo $1
+    exit 1
+}
+
+for value in $2; do
+    [[ $1 =~ (^|[[:space:]])$value($|[[:space:]]) ]] || printExit "Invlid input: $value"
+done
