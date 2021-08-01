@@ -28,6 +28,7 @@
   tags:
     - elasticsearch
     - elasticsearch_base_indexes
+    - elasticsearch_knn_indexes
 
 - name: Create base indexes
   shell:
