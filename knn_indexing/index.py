@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 import json
-import __settings__
+from . import __settings__
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
