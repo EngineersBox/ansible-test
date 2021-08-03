@@ -3,7 +3,11 @@
     container_names:
       - elasticsearch
     containers: "{{ item }}"
-  include_tasks: roles/common/tasks/docker_stop_remove_tasks.yml
+  include_tasks:
+    file: roles/common/tasks/docker_stop_remove_tasks.yml
+    apply:
+      tags:
+        - elasticsearch
   loop: "{{ container_names | batch(1) | list }}"
   tags:
     - elasticsearch
@@ -34,12 +38,18 @@
   shell:
     cmd: "python3.8 import_data.py"
     chdir: "temp/minitask"
+  register: create_base
   tags:
     - elasticsearch_base_indexes
+
+- debug: var=create_base
 
 - name: Create KNN indexes
   shell:
     cmd: "python3.8 index.py"
     chdir: "temp/knn_indexing"
+  register: create_knn
   tags:
     - elasticsearch_knn_indexes
+
+- debug: var=create_knn
