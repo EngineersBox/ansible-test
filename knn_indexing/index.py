@@ -36,8 +36,6 @@ def init_knn_es_index(index_name):
     else:
         print("Index already exists")
 
-
-
 # Turn a sentence into vectors
 def vectorise_sent(sent: str):
     sent = re.sub(r"[^\w\s]", "", sent)
@@ -52,9 +50,11 @@ def vectorise_sent(sent: str):
     return vs[0]
 
 def import_data_with_knn(index_name=INDEX_NAME):
+    print("Initialising KNN indexes...")
     init_knn_es_index(index_name)
+    print("Complete", "Loading data...")
     data_list = json.loads(open("../minitask/result.json").read())
-    print("Data loaded")
+    print("Complete")
 
     for i in range(len(data_list)):
         data = data_list[i]
@@ -87,8 +87,9 @@ def knn_query(query: str, index_name=INDEX_NAME):
     }
     start = datetime.datetime.now()
     if not ES:
-        print('rebuilding es conn')
+        print("Re-establishing Elasticsearch connection...")
         ES = Elasticsearch(URL, verify_certs=False, ssl_show_warn=False)
+        print("Connection established")
     results = ES.search(index=index_name, body=search_body)
     return results
 """
@@ -115,6 +116,6 @@ print("Duration:", duration)
 for result in results["hits"]["hits"]:
     print(result)
 """
-if __name__ == '__main__':
+if __name__ == "__main__":
     import_data_with_knn()
-    #knn_query("some") 
+    knn_query("some") 

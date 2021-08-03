@@ -18,28 +18,17 @@
 - hosts: targets
   roles:
     - elasticsearch
-  tags:
-    - elasticsearch
-    - elasticsearch_base_indexes
-    - elasticsearch_knn_indexes
 
 - hosts: targets
   roles:
     - redis # BGSAVE, stop + remove container, start new container, stop redis, copy data to redis dir, start redis
-  tags:
-    - redis
-    - redis_backup_restore
 
 - hosts: targets
   roles:
     - frontend
-  tags:
-    - frontend
 
 - hosts: targets
   roles:
-    - backend
-  tags:
     - backend
 
 - hosts: targets
