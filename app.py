@@ -8,12 +8,12 @@ from knn_indexing.index import knn_query
 from modules.RateLimiter.src.request_handler import RateLimiter
 from urllib3.exceptions import SSLError
 from collections import OrderedDict
-from typing import AnyStr, Callable
+from typing import Callable
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
-CF_KEY = "cf_store"
+CF_KEY = "test2"
 INDEX_NAME = "knn_index"
 ES = Elasticsearch("admin:admin@localhost:9200", verify_certs=False, ssl_show_warn=False)
 
