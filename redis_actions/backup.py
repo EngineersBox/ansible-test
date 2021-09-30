@@ -1,11 +1,6 @@
 import redis, time, subprocess
 
-rd = None
-try:
-    rd = redis.Redis()
-    rd.execute_command("version")
-except:
-    exit(0)
+rd = redis.Redis()
 
 rd.execute_command("bgsave")
 time.sleep(2000)

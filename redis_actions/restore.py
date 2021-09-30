@@ -1,11 +1,6 @@
 import redis, time, subprocess
 
-rd = None
-try:
-    rd = redis.Redis()
-    rd.execute_command("version")
-except:
-    exit(0)
+rd = redis.Redis()
 
 backup_dir = rd.execute_command("CONFIG get dir")
 subprocess.call("docker exec redis systemctl stop redis", shell=True)
