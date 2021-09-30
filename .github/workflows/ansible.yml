@@ -39,7 +39,7 @@ jobs:
           echo "Generated verbosity flag: [$verbosity_tags]"
       - name: Mapping target to inventory
         run: |
-          echo "target_inventory=\"${{ github.event.inputs.target }}\"" >> $GITHUB_ENV
+          echo "target_inventory=\"inventory/${{ github.event.inputs.target }}.ini\"" >> $GITHUB_ENV
           echo "Added specifier for target inventory"
       - name: Install ansible
         run: |
