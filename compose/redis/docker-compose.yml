@@ -7,3 +7,5 @@ services:
             context: ../../modules/CuckooFilter
         volumes:
             - ../redis:/redis
+        ports:
+            - "6379:6379"
