@@ -1,6 +1,7 @@
 version: "3.5"
 services:
   new-frontend:
-    build: .
+    build:
+      context: ../../frontend_new
     ports:
       - "3002:3002"

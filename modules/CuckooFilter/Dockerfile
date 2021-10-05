@@ -6,3 +6,4 @@ COPY libredis-cuckoofilter.so /libredis-cuckoofilter.so
 RUN chmod a+x /libredis-cuckoofilter.so
 
 EXPOSE 6379
+CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]

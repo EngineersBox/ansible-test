@@ -2,6 +2,7 @@ version: "3.5"
 services:
   backend:
     container_name: backend
-    build: .
+    build:
+      context: ../../
     ports:
       - "3001:3001"
