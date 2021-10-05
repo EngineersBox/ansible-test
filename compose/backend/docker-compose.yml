@@ -2,7 +2,6 @@ version: "3.5"
 services:
   backend:
     container_name: backend
+    network_mode: host
     build:
       context: ../../
-    ports:
-      - "3001:3001"

@@ -3,5 +3,4 @@ services:
   new-frontend:
     build:
       context: ../../frontend_new
-    ports:
-      - "3002:3002"
+    network_mode: host
